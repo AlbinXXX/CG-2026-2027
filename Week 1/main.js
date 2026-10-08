@@ -16,7 +16,7 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-const geometry = new THREE.ConeGeometry()
+const geometry = new THREE.BoxGeometry(1.5, 1.5, 1.5)
 const material = new THREE.MeshStandardMaterial({ color: 0xE8431C })
 const cube = new THREE.Mesh(geometry, material);
 scene.add(cube);
@@ -24,6 +24,7 @@ scene.add(cube);
 const light = new THREE.AmbientLight(0xFFFFFF, 2.5);
 scene.add(light);
 const dirLight = new THREE.DirectionalLight(0xFFFFFF, 2.5);
+dirLight.position.set(3, 4, 5);
 scene.add(dirLight);
 
 const control = new OrbitControls(camera, renderer.domElement)
@@ -36,3 +37,8 @@ function animate() {
     renderer.render(scene, camera);
 }
 animate()
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
