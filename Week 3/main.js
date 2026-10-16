@@ -8,7 +8,7 @@ window.innerWidth / window.innerHeight,
 0.1,
 100)
 
-camera.position.set(5, 6, 7)
+camera.position.set(0, 18, 28)
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight)
 document.body.appendChild(renderer.domElement)
@@ -17,7 +17,7 @@ const ambientLight = new THREE.AmbientLight(0xffffff, 2.3)
 scene.add(pointLight, ambientLight)
 
 const geometry = new THREE.SphereGeometry(2, 32, 24);
-const material = new THREE.MeshStandardMaterial({ color: 0xb44d1a, wireframe: true })
+const material = new THREE.MeshStandardMaterial({ color: 0xb44d1a, emissive: 0xb44d1a, emissiveIntensity: 1 })
 const sun = new THREE.Mesh(geometry, material)
 scene.add(sun)
 
@@ -89,7 +89,8 @@ moonOrbit.rotation.y += 0.04
 earth.rotation.y += 0.05
 
 sun.rotation.y += 0.006
-phobosOrbit.rotation.y += 0.04
+marsOrbit.rotation.y += 0.007
+phobosOrbit.rotation.y += 0.06
 mars.rotation.y += 0.05
 
 saturnOrbit.rotation.y += 0.004
@@ -98,3 +99,8 @@ saturn.rotation.y += 0.03
 renderer.render(scene, camera)
 }
 animate()
+window.addEventListener('resize', () => {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+});
