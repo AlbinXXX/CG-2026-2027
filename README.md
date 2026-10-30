@@ -1,9 +1,13 @@
-# Lab 3 — Hierarchical solar system
+# Computer Graphics — Weekly dashboard
 
-Based on the course TE_Group_EN examples. Sun is a scene child with central PointLight and AmbientLight. Earth sits at x=6 under earthOrbit; Moon sits under moonOrbit under Earth. Mars and Phobos form a second branch. The supplied Saturn and rings remain as an additional example. The camera frames the full system and the Sun has an emissive material so it is visible around the central light.
+All three completed labs in one place, based on TE_Group_EN course examples.
 
-Per-frame rotations: Earth orbit 0.01, Moon orbit 0.04, Earth spin 0.05, Sun spin 0.006, Mars orbit 0.007, Phobos orbit 0.06, Mars spin 0.05, Saturn orbit 0.004 and spin 0.03 radians. Child bodies inherit their parent transforms, so the Moon follows Earth.
+Run `npm ci`, then `npm run dev`. Open the displayed local address for the dashboard and choose a week. Each scene includes a Back to weeks link.
 
-Run `npm ci` then `npm run dev` and select Lab 3. Drag to orbit; scroll to zoom. Run `npm run build` for a production build.
+- Week 1: camera, orange cube, lighting, rotation and OrbitControls.
+- Week 2: editable vectors, arithmetic, angle and zero-vector handling; separate ray–plane challenge with an on-screen Raycaster comparison.
+- Week 3: Sun, Earth/Moon, Mars/Phobos and Saturn with hierarchical animation.
 
-Author date: October 16, 2026, matching the Classroom material date by request, not evidence of completion or submission then. The committer date records actual creation.
+Validation: `npm run build` and `node --test tests/lab2.test.js`.
+
+The original submission branches remain available separately. Their author dates match Classroom material dates by request; their committer dates record actual creation.

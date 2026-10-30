@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { vectorResults } from './math.js';
 import { OrbitControls } from 'three/examples/jsm/Addons.js';
 import GUI from 'three/examples/jsm/libs/lil-gui.module.min.js';
 
@@ -22,8 +23,8 @@ scene.add(new THREE.AxesHelper(3));
 const control = new OrbitControls(camera, renderer.domElement)
 
 const origin = new THREE.Vector3(0, 0, 0);
-const a = new THREE.Vector3(2, 1, 0)
-const b = new THREE.Vector3(0, 2, 0)
+const a = new THREE.Vector3(3, 4, 0)
+const b = new THREE.Vector3(1, 0, 0)
 
 const arrA = new THREE.ArrowHelper(a.clone().normalize(), origin, a.length(), 0xE8431C, 0.35, 0.2)
 const arrB = new THREE.ArrowHelper(b.clone().normalize(), origin, b.length(), 0x1E40FF, 0.35, 0.2)
@@ -69,27 +70,20 @@ results.open();
 
 
 function updateVector() {
-arrA.setDirection(a.clone().normalize())
-arrA.setLength(a.length(), 0.35, 0.3)
-arrB.setDirection(b.clone().normalize())
-arrB.setLength(b.length(), 0.35, 0.3)
+updateArrow(arrA, a);
+updateArrow(arrB, b);
 
 //a+b
 sum.addVectors(a, b)
-arrSum.setDirection(sum.clone().normalize())
-arrSum.setLength(sum.length(), 0.35, 0.3)
+updateArrow(arrSum, sum);
 
-const dot = a.dot(b)
-const cross = new THREE.Vector3().crossVectors(a,b);
-const crossLength = cross.length()
-const cos = THREE.MathUtils.clamp(dot / (a.length()*b.length()),-1,1)
-const angle = THREE.MathUtils.radToDeg(Math.acos(cos)); 
+const { dot, cross, crossLength, angle } = vectorResults(a, b);
 
 params.sum = `(${sum.x},${sum.y},${sum.z})`;
 params.dot = dot;
 params.cross = `(${cross.x},${cross.y},${cross.z})`;
 params.crossLength= crossLength;
-params.angle = angle;
+params.angle = angle === null ? 'Undefined (zero vector)' : angle.toFixed(2) + '°';
 
 results.controllersRecursive().forEach(controller => {
 controller.updateDisplay();
@@ -107,3 +101,11 @@ window.addEventListener('resize', () => {
     camera.updateProjectionMatrix();
     renderer.setSize(window.innerWidth, window.innerHeight);
 });
+
+function updateArrow(arrow, vector) {
+    const length = vector.length();
+    arrow.visible = length > 0;
+    if (!arrow.visible) return;
+    arrow.setDirection(vector.clone().normalize());
+    arrow.setLength(length, Math.min(0.35, length * 0.25), Math.min(0.3, length * 0.2));
+}
