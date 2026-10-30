@@ -1,7 +1,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import * as THREE from 'three';
-import { vectorResults, intersectPlane } from '../Week 2/math.js';
+import { vectorResults, intersectPlane } from '../labs/week-02/math.js';
 const v = (x,y,z) => new THREE.Vector3(x,y,z);
 test('required vector example and zero-vector boundary', () => {
  const r = vectorResults(v(3,4,0),v(1,0,0));

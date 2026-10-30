@@ -1,2 +1,15 @@
 import { defineConfig } from 'vite';
-export default defineConfig({ build: { rollupOptions: { input: ['index.html', 'Week 1/index.html', 'Week 2/index.html', 'Week 2/ray-plane.html', 'Week 3/index.html'] } } });
+
+export default defineConfig({
+    build: {
+        rolldownOptions: {
+            input: {
+                dashboard: 'index.html',
+                week01: 'labs/week-01/index.html',
+                week02: 'labs/week-02/index.html',
+                rayPlane: 'labs/week-02/ray-plane.html',
+                week03: 'labs/week-03/index.html',
+            },
+        },
+    },
+});
