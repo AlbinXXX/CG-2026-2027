@@ -1,0 +1,18 @@
+body { overflow: hidden; background: #10151f; }
+.lab-info { position: fixed; top: 28px; left: 28px; z-index: 2; max-width: 310px; color: #e7eef8; font: 14px/1.6 system-ui, sans-serif; }
+.eyebrow { color: #8edfd6; font-size: 10px; letter-spacing: 2px; }
+h1 { margin: 8px 0; font-size: 32px; font-weight: 500; letter-spacing: -1px; }
+.lab-info > p { color: #a4b3c7; }
+summary { cursor: pointer; color: #8edfd6; padding: 10px 0; }
+.exercise { background: #141c29f5; border: 1px solid #344357; border-radius: 12px; padding: 16px; max-height: 48vh; overflow: auto; }
+.exercise h2 { font-size: 14px; color: #8edfd6; }
+.exercise ol { padding-left: 20px; }
+.exercise li { margin-bottom: 8px; }
+.lil-gui.root { max-height: 85vh; overflow-y: auto; }
+@media (max-width: 650px) {
+    .lab-info { top: 12px; left: 12px; max-width: calc(100vw - 24px); pointer-events: none; }
+    h1 { font-size: 23px; }
+    .lab-info > p { display: none; }
+    details { pointer-events: auto; max-width: 280px; }
+    .lil-gui.root { top: auto; bottom: 0; max-height: 45vh; max-width: 58vw; }
+}
