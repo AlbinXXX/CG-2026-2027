@@ -30,7 +30,7 @@ CG-2026-2027/
 │   │   ├── index.html         # Hierarchical solar system
 │   │   └── main.js
 │   └── week-04/
-│       ├── index.html         # Crystal scene and exercise instructions
+│       ├── index.html         # Interactive crystal scene
 │       ├── main.js
 │       └── style.css
 ├── styles/
@@ -65,4 +65,4 @@ The original submission branches remain available separately. Their author dates
 
 ## Week 4 — Crystal & light
 
-Open `labs/week-04/index.html` from the dashboard. This practice exercise is based on your brief and includes its Minimum / Standard / Challenge instructions on screen. It covers a faceted crystal, ambient and directional lighting controls, material properties, shadows, a light helper, and time-based rotation. Implementation lives in `labs/week-04/main.js` with its page styles in `style.css`.
+Open `labs/week-04/index.html` from the dashboard. This practice exercise is based on your brief. It covers a faceted crystal, ambient and directional lighting controls, material properties, shadows, a light helper, and time-based rotation. Implementation lives in `labs/week-04/main.js` with its page styles in `style.css`.
