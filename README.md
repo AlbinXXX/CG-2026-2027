@@ -32,7 +32,6 @@ CG-2026-2027/
 │   └── week-04/
 │       ├── index.html         # Interactive crystal scene
 │       ├── main.js
-│       ├── background.js     # Gradient and studio reflections
 │       └── style.css
 ├── styles/
 │   ├── dashboard.css
@@ -66,6 +65,4 @@ The original submission branches remain available separately. Their author dates
 
 ## Week 4 — Crystal & light
 
-Open `labs/week-04/index.html` from the dashboard. This practice exercise is based on your brief. It starts with exactly five vertices (two tips and three ring points). A total-point slider changes the geometry. The simplified code keeps ambient and directional lighting controls, OrbitControls, color, roughness, wireframe, and optional rotation. Implementation lives in `labs/week-04/main.js` with its page styles in `style.css`.
-
-The crystal uses MeshPhysicalMaterial transmission, IOR and thickness to approximate glass refraction, plus studio environment reflections. The gradient includes light bands to reveal distortion. Adjust the Glass folder to compare refraction and transmission; this real-time effect does not simulate full ray-traced caustics. Background setup is kept in `background.js` to keep `main.js` short.
+Open `labs/week-04/index.html` from the dashboard. A five-vertex glass crystal rotates against a black background, lit by one fixed DirectionalLight. There are no GUI or camera controls. The camera points at the origin. Glass properties are defined directly in `main.js`.
