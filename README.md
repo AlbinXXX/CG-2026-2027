@@ -65,4 +65,4 @@ The original submission branches remain available separately. Their author dates
 
 ## Week 4 — Crystal & light
 
-Open `labs/week-04/index.html` from the dashboard. A five-vertex glass crystal rotates against a black background, lit by one fixed DirectionalLight. There are no GUI or camera controls. The camera points at the origin. Glass properties are defined directly in `main.js`.
+Open `labs/week-04/index.html` from the dashboard. A five-vertex glass crystal rotates against a black background, lit by one fixed DirectionalLight, with a studio reflection environment to keep the glass visible against black. There are no GUI or camera controls. The camera points at the origin. Glass properties are defined directly in `main.js`.

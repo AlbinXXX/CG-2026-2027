@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000000);
@@ -13,6 +14,13 @@ renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 document.body.appendChild(renderer.domElement);
 
+// Glass needs something to reflect; this does not change the black background.
+const studio = new RoomEnvironment();
+const pmrem = new THREE.PMREMGenerator(renderer);
+scene.environment = pmrem.fromScene(studio, 0.04).texture;
+studio.dispose();
+pmrem.dispose();
+
 // Two tips + a ring: 5 total points means 2 tips and 3 ring points.
 function createCrystal(totalPoints) {
     const points = [new THREE.Vector3(0, 2, 0), new THREE.Vector3(0, -2, 0)];
@@ -25,8 +33,8 @@ function createCrystal(totalPoints) {
 }
 
 const material = new THREE.MeshPhysicalMaterial({
-    color: 0xffffff, roughness: 0.06, metalness: 0, flatShading: true,
-    transmission: 1, thickness: 1.5, ior: 1.5,
+    color: 0xcaf5ed, roughness: 0.12, metalness: 0, flatShading: true,
+    transmission: 0.8, thickness: 1.5, ior: 1.5,
     attenuationColor: new THREE.Color(0xb5eee5), attenuationDistance: 4,
 });
 const crystal = new THREE.Mesh(createCrystal(5), material);
