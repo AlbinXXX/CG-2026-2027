@@ -26,19 +26,22 @@ controls.maxPolarAngle = Math.PI / 2 + 0.1;
 controls.update();
 controls.saveState();
 
-// Six-sided body, with a pointed crown and base. The convex hull triangulates it.
-const points = [new THREE.Vector3(0, 2, 0), new THREE.Vector3(0, -1.8, 0)];
-for (const y of [-0.8, 0.8]) {
-    for (let i = 0; i < 6; i++) {
-        const angle = i * Math.PI / 3;
-        points.push(new THREE.Vector3(Math.cos(angle), y, Math.sin(angle)));
+// Two rings plus the fixed crown and base tips.
+function createCrystalGeometry(pointsAround) {
+    const points = [new THREE.Vector3(0, 2, 0), new THREE.Vector3(0, -1.8, 0)];
+    for (const y of [-0.8, 0.8]) {
+        for (let i = 0; i < pointsAround; i++) {
+            const angle = i * Math.PI * 2 / pointsAround;
+            points.push(new THREE.Vector3(Math.cos(angle), y, Math.sin(angle)));
+        }
     }
+    return new ConvexGeometry(points);
 }
 const material = new THREE.MeshPhysicalMaterial({
     color: '#7ddbd2', roughness: 0.18, metalness: 0.15,
     clearcoat: 1, clearcoatRoughness: 0.1, flatShading: true,
 });
-const crystal = new THREE.Mesh(new ConvexGeometry(points), material);
+const crystal = new THREE.Mesh(createCrystalGeometry(6), material);
 crystal.castShadow = true;
 crystal.receiveShadow = true;
 scene.add(crystal);
@@ -75,7 +78,7 @@ scene.add(helper);
 
 const settings = {
     ambientColor: '#b6ccff', directionalColor: '#fff0dd', crystalColor: '#7ddbd2',
-    rotate: true, speed: 0.35,
+    rotate: true, speed: 0.35, pointsAround: 6,
     reset() {
         gui.reset();
         crystal.rotation.set(0, 0, 0);
@@ -83,6 +86,12 @@ const settings = {
     },
 };
 const gui = new GUI({ title: 'Crystal studio', width: 270 });
+const shapeFolder = gui.addFolder('Crystal shape');
+shapeFolder.add(settings, 'pointsAround', 3, 24, 1).name('Points around').onChange(value => {
+    const geometry = createCrystalGeometry(value);
+    crystal.geometry.dispose();
+    crystal.geometry = geometry;
+});
 const ambientFolder = gui.addFolder('Ambient light');
 ambientFolder.add(ambient, 'visible').name('Enabled');
 ambientFolder.addColor(settings, 'ambientColor').name('Color').onChange(value => ambient.color.set(value));
