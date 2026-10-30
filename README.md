@@ -65,4 +65,4 @@ The original submission branches remain available separately. Their author dates
 
 ## Week 4 — Crystal & light
 
-Open `labs/week-04/index.html` from the dashboard. This practice exercise is based on your brief. It covers a faceted crystal, ambient and directional lighting controls, material properties, shadows, a light helper, and time-based rotation. Implementation lives in `labs/week-04/main.js` with its page styles in `style.css`.
+Open `labs/week-04/index.html` from the dashboard. This practice exercise is based on your brief. It starts with exactly five vertices (two tips and three ring points). A total-point slider changes the geometry. The simplified code keeps ambient and directional lighting controls, OrbitControls, color, roughness, wireframe, and optional rotation. Implementation lives in `labs/week-04/main.js` with its page styles in `style.css`.

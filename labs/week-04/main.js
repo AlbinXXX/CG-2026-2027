@@ -1,136 +1,69 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-import GUI from 'three/addons/libs/lil-gui.module.min.js';
 import { ConvexGeometry } from 'three/addons/geometries/ConvexGeometry.js';
+import GUI from 'three/addons/libs/lil-gui.module.min.js';
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x10151f);
-const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 100);
-camera.position.set(5, 3.3, 7);
 
+const camera = new THREE.PerspectiveCamera(50, innerWidth / innerHeight, 0.1, 100);
+camera.position.set(4, 3, 6);
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(innerWidth, innerHeight);
-renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-renderer.shadowMap.enabled = true;
-renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
 document.body.appendChild(renderer.domElement);
-renderer.domElement.setAttribute('aria-label', 'Interactive faceted crystal with adjustable lighting');
-
 const controls = new OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
-controls.target.set(0, 0.1, 0);
-controls.minDistance = 3;
-controls.maxDistance = 18;
-controls.maxPolarAngle = Math.PI / 2 + 0.1;
-controls.update();
-controls.saveState();
 
-// Two rings plus the fixed crown and base tips.
-function createCrystalGeometry(pointsAround) {
-    const points = [new THREE.Vector3(0, 2, 0), new THREE.Vector3(0, -1.8, 0)];
-    for (const y of [-0.8, 0.8]) {
-        for (let i = 0; i < pointsAround; i++) {
-            const angle = i * Math.PI * 2 / pointsAround;
-            points.push(new THREE.Vector3(Math.cos(angle), y, Math.sin(angle)));
-        }
+// Two tips + a ring: 5 total points means 2 tips and 3 ring points.
+function createCrystal(totalPoints) {
+    const points = [new THREE.Vector3(0, 2, 0), new THREE.Vector3(0, -2, 0)];
+    const ringPoints = totalPoints - 2;
+    for (let i = 0; i < ringPoints; i++) {
+        const angle = i * Math.PI * 2 / ringPoints;
+        points.push(new THREE.Vector3(Math.cos(angle), 0, Math.sin(angle)));
     }
     return new ConvexGeometry(points);
 }
-const material = new THREE.MeshPhysicalMaterial({
-    color: '#7ddbd2', roughness: 0.18, metalness: 0.15,
-    clearcoat: 1, clearcoatRoughness: 0.1, flatShading: true,
+
+const material = new THREE.MeshStandardMaterial({
+    color: 0x7ddbd2, roughness: 0.25, flatShading: true,
 });
-const crystal = new THREE.Mesh(createCrystalGeometry(6), material);
-crystal.castShadow = true;
-crystal.receiveShadow = true;
+const crystal = new THREE.Mesh(createCrystal(5), material);
 scene.add(crystal);
 
-const pedestal = new THREE.Mesh(
-    new THREE.CylinderGeometry(1.65, 1.85, 0.35, 64),
-    new THREE.MeshStandardMaterial({ color: 0x354254, roughness: 0.65 }),
-);
-pedestal.position.y = -2;
-pedestal.castShadow = true;
-pedestal.receiveShadow = true;
-scene.add(pedestal);
-const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(200, 200),
-    new THREE.MeshStandardMaterial({ color: 0x172130, roughness: 0.9 }),
-);
-floor.rotation.x = -Math.PI / 2;
-floor.position.y = -2.18;
-floor.receiveShadow = true;
-scene.add(floor);
+const ambient = new THREE.AmbientLight(0xffffff, 0.7);
+const directional = new THREE.DirectionalLight(0xffffff, 3);
+directional.position.set(3, 4, 5);
+scene.add(ambient, directional);
 
-const ambient = new THREE.AmbientLight('#b6ccff', 0.7);
-const directional = new THREE.DirectionalLight('#fff0dd', 4);
-directional.position.set(4, 6, 3);
-directional.castShadow = true;
-directional.shadow.mapSize.set(2048, 2048);
-Object.assign(directional.shadow.camera, { left: -5, right: 5, top: 5, bottom: -5, near: 0.1, far: 35 });
-directional.shadow.camera.updateProjectionMatrix();
-directional.shadow.normalBias = 0.03;
-scene.add(ambient, directional, directional.target);
-const helper = new THREE.DirectionalLightHelper(directional, 0.8);
-helper.visible = false;
-scene.add(helper);
-
-const settings = {
-    ambientColor: '#b6ccff', directionalColor: '#fff0dd', crystalColor: '#7ddbd2',
-    rotate: true, speed: 0.35, pointsAround: 6,
-    reset() {
-        gui.reset();
-        crystal.rotation.set(0, 0, 0);
-        controls.reset();
-    },
-};
-const gui = new GUI({ title: 'Crystal studio', width: 270 });
-const shapeFolder = gui.addFolder('Crystal shape');
-shapeFolder.add(settings, 'pointsAround', 3, 24, 1).name('Points around').onChange(value => {
-    const geometry = createCrystalGeometry(value);
+const settings = { points: 5, rotate: true, color: '#7ddbd2' };
+const gui = new GUI({ title: 'Crystal controls' });
+gui.add(settings, 'points', 5, 24, 1).name('Total points').onChange(value => {
     crystal.geometry.dispose();
-    crystal.geometry = geometry;
+    crystal.geometry = createCrystal(value);
 });
-const ambientFolder = gui.addFolder('Ambient light');
-ambientFolder.add(ambient, 'visible').name('Enabled');
-ambientFolder.addColor(settings, 'ambientColor').name('Color').onChange(value => ambient.color.set(value));
-ambientFolder.add(ambient, 'intensity', 0, 3, 0.05).name('Intensity');
-const directionalFolder = gui.addFolder('Directional light');
-directionalFolder.add(directional, 'visible').name('Enabled');
-directionalFolder.addColor(settings, 'directionalColor').name('Color').onChange(value => directional.color.set(value));
-directionalFolder.add(directional, 'intensity', 0, 8, 0.05).name('Intensity');
-directionalFolder.add(directional.position, 'x', -8, 8, 0.1).name('Position X');
-directionalFolder.add(directional.position, 'y', 1, 10, 0.1).name('Position Y');
-directionalFolder.add(directional.position, 'z', -8, 8, 0.1).name('Position Z');
-directionalFolder.add(directional, 'castShadow').name('Cast shadows');
-directionalFolder.add(helper, 'visible').name('Show light helper');
-const crystalFolder = gui.addFolder('Crystal material');
-crystalFolder.addColor(settings, 'crystalColor').name('Color').onChange(value => material.color.set(value));
-crystalFolder.add(material, 'roughness', 0.05, 1, 0.01).name('Roughness');
-crystalFolder.add(material, 'metalness', 0, 1, 0.01).name('Metalness');
-crystalFolder.add(material, 'clearcoat', 0, 1, 0.01).name('Clearcoat');
-crystalFolder.add(material, 'wireframe').name('Wireframe');
-crystalFolder.close();
-const motionFolder = gui.addFolder('Motion');
-motionFolder.add(settings, 'rotate').name('Auto rotate');
-motionFolder.add(settings, 'speed', -1.5, 1.5, 0.05).name('Speed (rad/s)');
-gui.add(settings, 'reset').name('Reset scene');
-if (innerWidth < 650) gui.close();
+gui.add(settings, 'rotate').name('Rotate');
+gui.addColor(settings, 'color').onChange(value => material.color.set(value));
+gui.add(material, 'roughness', 0, 1);
+gui.add(material, 'wireframe');
 
-let previousTime;
+const lights = gui.addFolder('Lights');
+lights.add(ambient, 'intensity', 0, 3).name('Ambient intensity');
+lights.add(directional, 'intensity', 0, 6).name('Directional intensity');
+lights.add(directional.position, 'x', -8, 8).name('Light X');
+lights.add(directional.position, 'y', 1, 8).name('Light Y');
+lights.add(directional.position, 'z', -8, 8).name('Light Z');
+
+let previousTime = 0;
 renderer.setAnimationLoop(time => {
-    // Clamp the interval after returning from a background tab.
-    const delta = previousTime === undefined ? 0 : Math.min((time - previousTime) / 1000, 0.05);
+    const delta = Math.min((time - previousTime) / 1000, 0.05);
     previousTime = time;
-    if (settings.rotate) crystal.rotation.y += settings.speed * delta;
+    if (settings.rotate) crystal.rotation.y += delta * 0.35;
     controls.update();
-    helper.update();
     renderer.render(scene, camera);
 });
+
 window.addEventListener('resize', () => {
     camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
     renderer.setSize(innerWidth, innerHeight);
-    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 });
