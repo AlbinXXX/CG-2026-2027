@@ -30,7 +30,7 @@ CG-2026-2027/
 │   │   ├── index.html         # Hierarchical solar system
 │   │   └── main.js
 │   └── week-04/
-│       ├── index.html         # Interactive crystal scene
+│       ├── index.html         # Interactive car model
 │       ├── main.js
 │       └── style.css
 ├── styles/
@@ -63,6 +63,10 @@ To add a week, create `labs/week-05/index.html` and `main.js`, link the shared `
 
 The original submission branches remain available separately. Their author dates match Classroom material dates by request; their committer dates record actual creation.
 
-## Week 4 — Crystal & light
+## Week 4 — Car model
 
-Open `labs/week-04/index.html` from the dashboard. A five-vertex glass crystal rotates against a black background, lit by one fixed DirectionalLight, with a studio reflection environment to keep the glass visible against black. There are no GUI or camera controls. The camera points at the origin. Glass properties are defined directly in `main.js`.
+Open `labs/week-04/index.html`. Drag to rotate, scroll to zoom, and right-drag to pan using OrbitControls. The background is light grey, with fixed lighting and no GUI panel.
+
+The car loads from `public/models/toy-car/ToyCar.glb` using GLTFLoader. After loading, the browser console logs mesh count, total vertex buffer entries and triangle faces, summed across mesh instances. Shared vertices at matching positions are not welded for this count. There is no on-screen statistics overlay.
+
+Model: [Khronos Toy Car](https://github.com/KhronosGroup/glTF-Sample-Assets/tree/main/Models/ToyCar), CC0-1.0. See `public/models/toy-car/LICENSE.md` for license details.
